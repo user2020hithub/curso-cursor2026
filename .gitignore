@@ -1,0 +1,5 @@
+# Dependencias de Node
+node_modules/
+
+# CSS compilado (se regenera con npm run build)
+dist/

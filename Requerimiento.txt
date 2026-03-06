@@ -1,0 +1,17 @@
+Paso 1. Quiero crear una landing page para vender un curso de cursor. Necesito que me ayudes a pensar en el stack Tecnológico que podría utilizar.
+Digamos que este proyecto está dentro de mi proyecto profesional llamado Trinchera WP. Puedes ver más información sobre ello en @https://trincherawp.com donde creamos cursos de desarrollo web tanto WordPress, como larabel o desarrollo en general (incluso a veces temas de marketing o diseño). 
+Este curso está enfocado en enseñar qué es cursor, mostrar cómo funciona y crear un ejemplo sencillo de código. Es por ello que, no sé si sería necesario crear un proyecto con WordPress o si podríamos mostrar estos beneficios simplemente con un html css y, quizás js.
+Qué te parece si me ayudas a definir los textos del curso y una pequeña estructura de lo que podría ser la landing page de venta.
+
+
+
+Paso 2. Vamos a trabajar con la parte de hacer la landing page con HTML y CSS, por tanto, trabajaremos juntos en el desarrollo.
+Gracias. 
+
+Paso 3. Muchas gracias, necesito ahora que me ayudes a utilizar la CDN de Tailliwind CSS, cambiar el CSS personalizado por el de Taillwind CSS y eliminar el archivo de CSS.
+
+
+Paso 4. Ayúdame a instalar tailwind css de forma que sea lo más óptimo posible.
+
+Paso 5. Dado que el font family está en el archivo .. es necesario tener el style en el head del @index.html en la línea 14?
+Revisa el archivo @index.html y analiza si se debe seguir usando el style en el head?
