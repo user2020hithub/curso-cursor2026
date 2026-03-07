@@ -8,8 +8,77 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./dist/output.css">
+    <style>[x-cloak] { display: none !important; }</style>
+    <script>
+        function modal() {
+            return {
+                open: false,
+                email: '',
+                rgpd: false,
+                submitted: false,
+                loading: false,
+                errorMsg: '',
+
+                openModal() {
+                    this.open = true;
+                    document.body.style.overflow = 'hidden';
+                },
+
+                closeModal() {
+                    this.open = false;
+                    document.body.style.overflow = '';
+                    setTimeout(() => {
+                        this.email     = '';
+                        this.rgpd      = false;
+                        this.submitted = false;
+                        this.errorMsg  = '';
+                        this.loading   = false;
+                    }, 200);
+                },
+
+                async submitForm() {
+                    if (!this.email || !this.rgpd) return;
+                    this.loading   = true;
+                    this.errorMsg  = '';
+                    const WEBHOOK_URL = 'https://hook.eu2.make.com/TU_WEBHOOK_AQUI';
+                    const payload = {
+                        email:         this.email,
+                        rgpd_aceptado: true,
+                        fecha:         new Date().toISOString(),
+                        origen:        window.location.href
+                    };
+
+                    // TODO: eliminar este bloque cuando tengas el webhook real
+                    const MODO_PRUEBA = WEBHOOK_URL.includes('TU_WEBHOOK_AQUI');
+                    if (MODO_PRUEBA) {
+                        console.group('%c📬 Formulario enviado (modo prueba)', 'color: #818cf8; font-weight: bold; font-size: 14px;');
+                        console.log('%cDatos que se enviarían al webhook:', 'color: #94a3b8;');
+                        console.table(payload);
+                        console.groupEnd();
+                        await new Promise(r => setTimeout(r, 800));
+                        this.submitted = true;
+                        this.loading   = false;
+                        return;
+                    }
+
+                    try {
+                        await fetch(WEBHOOK_URL, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        this.submitted = true;
+                    } catch {
+                        this.errorMsg = 'Ha ocurrido un error. Por favor, inténtalo de nuevo.';
+                    } finally {
+                        this.loading = false;
+                    }
+                }
+            };
+        }
+    </script>
 </head>
-<body class="bg-[#0d1117] text-slate-200 font-sans leading-relaxed">
+<body class="bg-[#0d1117] text-slate-200 font-sans leading-relaxed" x-data="modal()">
 
     <!-- Navbar -->
     <header class="sticky top-0 z-50 border-b border-[#30363d] bg-[#0d1117]/90 backdrop-blur-md">
@@ -41,9 +110,9 @@
                     Aprende a utilizar el editor de código con Inteligencia Artificial integrada que está cambiando las reglas del juego. Domina el contexto, automatiza tareas y crea un proyecto web real desde cero.
                 </p>
                 <div class="flex justify-center gap-4 mb-6 flex-wrap">
-                    <a href="#comprar" class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-7 rounded-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-500/30">
+                    <button @click="openModal()" class="inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-7 rounded-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-500/30 cursor-pointer">
                         Quiero dominar Cursor ahora
-                    </a>
+                    </button>
                     <a href="#temario" class="inline-block bg-transparent text-slate-200 border border-[#30363d] hover:bg-white/5 font-bold py-4 px-7 rounded-lg transition-all duration-300">
                         Ver el temario
                     </a>
@@ -204,9 +273,9 @@
                         <li class="flex items-center gap-3 text-sm text-[#7d8590]"><span class="text-green-500 font-extrabold">✓</span> Acceso a futuras actualizaciones del curso</li>
                         <li class="flex items-center gap-3 text-sm text-[#7d8590]"><span class="text-green-500 font-extrabold">✓</span> Comunidad Trinchera WP</li>
                     </ul>
-                    <a href="#" class="block w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-5 rounded-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-500/30 text-lg">
+                    <button @click="openModal()" class="block w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-5 rounded-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-500/30 text-lg cursor-pointer">
                         Acceder al curso completo
-                    </a>
+                    </button>
                     <p class="text-xs text-[#7d8590] mt-5">Garantía de 7 días. Si no es para ti, te devolvemos el dinero.</p>
                 </div>
             </div>
@@ -270,11 +339,91 @@
             <p class="text-xl font-extrabold tracking-tight mb-2">Trinchera WP</p>
             <p class="text-sm text-[#7d8590]">
                 © 2025 Trinchera WP ·
-                <a href="#" class="text-[#7d8590] hover:text-slate-200 transition-colors">Aviso Legal</a> ·
-                <a href="#" class="text-[#7d8590] hover:text-slate-200 transition-colors">Política de Privacidad</a>
+                <a href="./aviso-legal.html" class="text-[#7d8590] hover:text-slate-200 transition-colors">Aviso Legal</a> ·
+                <a href="./aviso-legal.html" class="text-[#7d8590] hover:text-slate-200 transition-colors">Política de Privacidad</a>
             </p>
         </div>
     </footer>
 
+
+    <!-- ===== MODAL DE COMPRA ===== -->
+    <div
+        x-show="open"
+        x-cloak
+        @keydown.escape.window="closeModal()"
+        class="fixed inset-0 z-[100] flex items-center justify-center p-4"
+    >
+        <!-- Fondo oscuro -->
+        <div @click="closeModal()" class="absolute inset-0 bg-black/70 backdrop-blur-sm"></div>
+
+        <!-- Contenedor -->
+        <div class="relative bg-[#161b22] border border-[#30363d] rounded-2xl p-8 w-full max-w-md shadow-2xl">
+
+            <!-- Botón cerrar -->
+            <button @click="closeModal()" x-show="!submitted" class="absolute top-4 right-4 text-[#7d8590] hover:text-slate-200 transition-colors cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+
+            <!-- FORMULARIO -->
+            <div x-show="!submitted">
+                <span class="inline-block bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-4">Acceso al curso</span>
+                <h3 class="text-2xl font-extrabold mb-2 tracking-tight">¡Reserva tu plaza!</h3>
+                <p class="text-[#7d8590] text-sm mb-6 leading-relaxed">Déjanos tu email y te avisamos en cuanto el curso esté disponible. Sin spam, solo lo importante.</p>
+
+                <form @submit.prevent="submitForm()">
+                    <div class="mb-4">
+                        <label for="modal-email" class="block text-sm font-semibold mb-2">Correo electrónico</label>
+                        <input type="email" id="modal-email" x-model="email" placeholder="tu@email.com" required
+                            class="w-full bg-[#0d1117] border border-[#30363d] rounded-lg px-4 py-3 text-slate-200 placeholder-[#7d8590] focus:outline-none focus:border-indigo-500 transition-colors">
+                    </div>
+
+                    <div class="mb-6">
+                        <label class="flex items-start gap-3 cursor-pointer group">
+                            <input type="checkbox" x-model="rgpd" required
+                                class="mt-0.5 w-4 h-4 accent-indigo-500 shrink-0 cursor-pointer">
+                            <span class="text-xs text-[#7d8590] leading-relaxed group-hover:text-slate-400 transition-colors">
+                                He leído y acepto la <a href="./aviso-legal.html" target="_blank" class="text-indigo-400 hover:text-indigo-300 underline underline-offset-2">Política de Privacidad</a> y consiento el tratamiento de mis datos personales conforme al RGPD.
+                            </span>
+                        </label>
+                    </div>
+
+                    <p x-show="errorMsg" x-text="errorMsg" class="text-red-400 text-xs mb-4 bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-3"></p>
+
+                    <button type="submit" :disabled="loading || !rgpd || !email"
+                        class="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-4 rounded-lg transition-all duration-300 cursor-pointer">
+                        <span x-show="!loading">Quiero acceder al curso &rarr;</span>
+                        <span x-show="loading" class="flex items-center justify-center gap-2">
+                            <svg class="animate-spin w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                            </svg>
+                            Enviando...
+                        </span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- CONFIRMACIÓN -->
+            <div x-show="submitted" class="text-center py-4">
+                <div class="w-16 h-16 bg-green-500/10 border border-green-500/30 rounded-full flex items-center justify-center mx-auto mb-5">
+                    <svg class="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-extrabold mb-3 tracking-tight">¡Ya estás dentro!</h3>
+                <p class="text-[#7d8590] text-sm leading-relaxed mb-2">Hemos recibido tu solicitud. Te hemos enviado una confirmación a</p>
+                <p x-text="email" class="text-indigo-400 font-semibold text-sm mb-6"></p>
+                <p class="text-[#7d8590] text-xs mb-6">Te avisaremos en cuanto el curso esté disponible. ¡Gracias por tu interés!</p>
+                <button @click="closeModal()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg transition-all duration-300 cursor-pointer">
+                    Perfecto, ¡hasta pronto!
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="./alpine.min.js"></script>
 </body>
 </html>
