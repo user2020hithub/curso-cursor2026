@@ -15,3 +15,13 @@ Paso 4. Ayúdame a instalar tailwind css de forma que sea lo más óptimo posibl
 
 Paso 5. Dado que el font family está en el archivo .. es necesario tener el style en el head del @index.html en la línea 14?
 Revisa el archivo @index.html y analiza si se debe seguir usando el style en el head?
+
+
+
+Pasos para actualizar en GitHub
+=================================
+Terminal cursor
+npm run buid
+git add .
+git commit -m "Aquí va el mensaje de actualización"
+git push origin main
