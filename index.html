@@ -82,77 +82,10 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap"></noscript>
     <link rel="stylesheet" href="./dist/output.css">
     <style>[x-cloak] { display: none !important; }</style>
-    <script>
-        function modal() {
-            return {
-                open: false,
-                email: '',
-                rgpd: false,
-                submitted: false,
-                loading: false,
-                errorMsg: '',
-
-                openModal() {
-                    this.open = true;
-                    document.body.style.overflow = 'hidden';
-                },
-
-                closeModal() {
-                    this.open = false;
-                    document.body.style.overflow = '';
-                    setTimeout(() => {
-                        this.email     = '';
-                        this.rgpd      = false;
-                        this.submitted = false;
-                        this.errorMsg  = '';
-                        this.loading   = false;
-                    }, 200);
-                },
-
-                async submitForm() {
-                    if (!this.email || !this.rgpd) return;
-                    this.loading   = true;
-                    this.errorMsg  = '';
-                    const WEBHOOK_URL = 'https://hook.eu2.make.com/TU_WEBHOOK_AQUI';
-                    const payload = {
-                        email:         this.email,
-                        rgpd_aceptado: true,
-                        fecha:         new Date().toISOString(),
-                        origen:        window.location.href
-                    };
-
-                    // TODO: eliminar este bloque cuando tengas el webhook real
-                    const MODO_PRUEBA = WEBHOOK_URL.includes('TU_WEBHOOK_AQUI');
-                    if (MODO_PRUEBA) {
-                        console.group('%c📬 Formulario enviado (modo prueba)', 'color: #818cf8; font-weight: bold; font-size: 14px;');
-                        console.log('%cDatos que se enviarían al webhook:', 'color: #94a3b8;');
-                        console.table(payload);
-                        console.groupEnd();
-                        await new Promise(r => setTimeout(r, 800));
-                        this.submitted = true;
-                        this.loading   = false;
-                        return;
-                    }
-
-                    try {
-                        await fetch(WEBHOOK_URL, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(payload)
-                        });
-                        this.submitted = true;
-                    } catch {
-                        this.errorMsg = 'Ha ocurrido un error. Por favor, inténtalo de nuevo.';
-                    } finally {
-                        this.loading = false;
-                    }
-                }
-            };
-        }
-    </script>
 </head>
 <body class="bg-[#0d1117] text-slate-200 font-sans leading-relaxed" x-data="modal()">
 
@@ -500,6 +433,74 @@
         </div>
     </div>
 
-    <script src="alpine.min.js"></script>
+    <script>
+        function modal() {
+            return {
+                open: false,
+                email: '',
+                rgpd: false,
+                submitted: false,
+                loading: false,
+                errorMsg: '',
+
+                openModal() {
+                    this.open = true;
+                    document.body.style.overflow = 'hidden';
+                },
+
+                closeModal() {
+                    this.open = false;
+                    document.body.style.overflow = '';
+                    setTimeout(() => {
+                        this.email     = '';
+                        this.rgpd      = false;
+                        this.submitted = false;
+                        this.errorMsg  = '';
+                        this.loading   = false;
+                    }, 200);
+                },
+
+                async submitForm() {
+                    if (!this.email || !this.rgpd) return;
+                    this.loading   = true;
+                    this.errorMsg  = '';
+                    const WEBHOOK_URL = 'https://hook.eu2.make.com/TU_WEBHOOK_AQUI';
+                    const payload = {
+                        email:         this.email,
+                        rgpd_aceptado: true,
+                        fecha:         new Date().toISOString(),
+                        origen:        window.location.href
+                    };
+
+                    // TODO: eliminar este bloque cuando tengas el webhook real
+                    const MODO_PRUEBA = WEBHOOK_URL.includes('TU_WEBHOOK_AQUI');
+                    if (MODO_PRUEBA) {
+                        console.group('%c📬 Formulario enviado (modo prueba)', 'color: #818cf8; font-weight: bold; font-size: 14px;');
+                        console.log('%cDatos que se enviarían al webhook:', 'color: #94a3b8;');
+                        console.table(payload);
+                        console.groupEnd();
+                        await new Promise(r => setTimeout(r, 800));
+                        this.submitted = true;
+                        this.loading   = false;
+                        return;
+                    }
+
+                    try {
+                        await fetch(WEBHOOK_URL, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        this.submitted = true;
+                    } catch {
+                        this.errorMsg = 'Ha ocurrido un error. Por favor, inténtalo de nuevo.';
+                    } finally {
+                        this.loading = false;
+                    }
+                }
+            };
+        }
+    </script>
+    <script src="alpine.min.js" defer></script>
 </body>
 </html>
