@@ -100,6 +100,16 @@ Son 157 caracteres. La coloco justo debajo del <title>, que es la posición est�
 <meta name="description" content="Domina Cursor, el editor de código con IA integrada, y desarrolla 10x más rápido. Curso práctico para devs de WordPress, Laravel y Frontend. Por Trinchera WP.">`
 <link rel="preconnect" href="https://fonts.googleapis.com">
 
+Listo. Así queda el <head> ahora:
+<title>Curso de Cursor | Trinchera WP</title>
+<meta name="description" content="Domina Cursor, el editor de código con IA integrada, y desarrolla 10x más rápido. Curso práctico para devs de WordPress, Laravel y Frontend. Por Trinchera WP.">
 
+Por qué está bien redactada:
+
+Empieza con el verbo de acción "Domina" (engancha desde el principio)
+Incluye "Cursor" y "editor de código con IA" (las búsquedas más probables)
+Menciona los tres perfiles de audiencia (WordPress, Laravel, Frontend) para relevancia
+El nombre de marca "Trinchera WP" al final refuerza la identidad
+157 caracteres: en el rango ideal para que Google no la recorte
 
 
