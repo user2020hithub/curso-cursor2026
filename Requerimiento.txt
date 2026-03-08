@@ -20,8 +20,13 @@ Revisa el archivo @index.html y analiza si se debe seguir usando el style en el 
 
 Pasos para actualizar en GitHub
 =================================
-Terminal cursor
+Terminal cursor:
+
 npm run buid
 git add .
 git commit -m "Aquí va el mensaje de actualización"
 git push origin main
+
+o también:
+
+gcpmain
